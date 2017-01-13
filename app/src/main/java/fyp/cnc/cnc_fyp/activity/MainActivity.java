@@ -1,26 +1,10 @@
-package fyp.cnc.cnc_fyp;
+package fyp.cnc.cnc_fyp.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientURI;
-import com.mongodb.MongoCredential;
-import com.mongodb.ServerAddress;
-import com.mongodb.client.FindIterable;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoCursor;
-import com.mongodb.client.MongoDatabase;
-
-import org.bson.BSON;
-import org.bson.Document;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -31,9 +15,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
-import java.util.Arrays;
+
+import fyp.cnc.cnc_fyp.R;
 
 public class MainActivity extends AppCompatActivity {
     String json_string=null;
@@ -44,9 +28,6 @@ public class MainActivity extends AppCompatActivity {
         TextView tv_test=(TextView)findViewById(R.id.tv_test);
         Thread thread = new Thread(get_json);
         thread.start();
-        while(json_string==null) {
-
-        }
         tv_test.setText(json_string);
     }
     private Runnable get_json = new Runnable() {
@@ -64,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         }
     };
     public JSONObject get_data() {
-        InputStream is = null;
+        InputStream is;
         JSONObject json = null;
         String output = "";
         URL _url;
