@@ -31,7 +31,7 @@ public class LoginActivity extends Activity {
     private static final String TAG = RegisterActivity.class.getSimpleName();
     private Button buttonLogin;
     private Button buttonLinkToRegister;
-    private EditText inputUserID;
+    private EditText inputUserEmail;
     private EditText inputUserPass;
     private ProgressDialog progressDialog;
     private SessionManager session;
@@ -42,10 +42,10 @@ public class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        inputUserID = (EditText) findViewById(R.id.userID);
+        inputUserEmail = (EditText) findViewById(R.id.userEmail);
         inputUserPass = (EditText) findViewById(R.id.userPass);
-        buttonLogin = (Button) findViewById(R.id.button_Login);
-        buttonLinkToRegister = (Button) findViewById(R.id.button_To_Register);
+        buttonLogin = (Button) findViewById(R.id.buttonLogin);
+        buttonLinkToRegister = (Button) findViewById(R.id.buttonToRegister);
 
         //Progress dialog
         progressDialog = new ProgressDialog(this);
@@ -68,13 +68,13 @@ public class LoginActivity extends Activity {
         //Login button onClick event
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                String userID = inputUserID.getText().toString().trim();
+                String userEmail = inputUserEmail.getText().toString().trim();
                 String userPass = inputUserPass.getText().toString().trim();
 
                 //Check for empty data in form
-                if (!userID.isEmpty() && !userPass.isEmpty()) {
+                if (!userEmail.isEmpty() && !userPass.isEmpty()) {
                     //Login
-                    checkLogin(userID, userPass);
+                    checkLogin(userEmail, userPass);
                 } else {
                     //Required credentials are missing
                     Toast.makeText(getApplicationContext(), "Please enter your login credentials.", Toast.LENGTH_LONG).show();
@@ -82,7 +82,7 @@ public class LoginActivity extends Activity {
             }
         });
 
-        //Link to Register
+        //Link to register
         buttonLinkToRegister.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 Intent i = new Intent(getApplicationContext(), RegisterActivity.class);
@@ -93,7 +93,7 @@ public class LoginActivity extends Activity {
     }
 
     //Verify login details
-    private void checkLogin(final String userID, final String userPass) {
+    private void checkLogin(final String userEmail, final String userPass) {
         //Tag used to cancel the request
         String tag_string_req = "req_login";
 
@@ -117,12 +117,12 @@ public class LoginActivity extends Activity {
 
                         //Store the ser in SQLite
                         JSONObject user = jsonObject.getJSONObject("user");
-                        String userID = user.getString("userID");
+                        String userEmail = user.getString("userEmail");
                         String userRole = user.getString("userRole");
                         String userStatus = user.getString("userStatus");
 
                         //Insert row to user table
-                        db.addUser(userID, userRole, userStatus);
+                        db.addUser(userEmail, userRole, userStatus);
 
                         //Launch main activity
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -151,7 +151,7 @@ public class LoginActivity extends Activity {
             protected Map<String, String> getParams() {
                 //Post parameters to login URL
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("userID", userID);
+                params.put("userEmail", userEmail);
                 params.put("userPass", userPass);
 
                 return params;
