@@ -25,6 +25,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     private static final String TABLE_USER = "user";
 
     //login table columns names
+    private static final String KEY_ID = "id";
     private static final String KEY_EMAIL = "email";
     private static final String KEY_ROLE = "role";
     private static final String KEY_STATUS = "status";
@@ -36,7 +37,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     //Createing tables
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String CREATE_LOGIN_TABLE = "CREATE TABLE " + TABLE_USER + "(" + KEY_EMAIL + " VARCHAR(50) PRIMARY KEY, " + KEY_ROLE + " VARCHAR(25), " + KEY_STATUS + " VARCHAR(25))";
+        String CREATE_LOGIN_TABLE = "CREATE TABLE " + TABLE_USER + "(" + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + KEY_EMAIL + " VARCHAR(50), " + KEY_ROLE + " VARCHAR(25), " + KEY_STATUS + " VARCHAR(25))";
         db.execSQL(CREATE_LOGIN_TABLE);;
 
         Log.d(TAG, "Database table created.");
