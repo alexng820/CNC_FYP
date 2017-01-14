@@ -14,10 +14,6 @@ import fyp.cnc.cnc_fyp.helper.SQLiteHandler;
 import fyp.cnc.cnc_fyp.helper.SessionManager;
 
 public class MainActivity extends Activity {
-    private TextView textEmail;
-    private TextView textRole;
-    private TextView textStatus;
-    private Button buttonLogout;
 
     private SQLiteHandler db;
     private SessionManager session;
@@ -27,10 +23,10 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        textEmail = (TextView) findViewById(R.id.textEmail);
-        textRole = (TextView) findViewById(R.id.textRole);
-        textStatus = (TextView) findViewById(R.id.textStatus);
-        buttonLogout = (Button) findViewById(R.id.buttonLogout);
+        TextView textEmail = (TextView) findViewById(R.id.textEmail);
+        TextView textRole = (TextView) findViewById(R.id.textRole);
+        TextView textStatus = (TextView) findViewById(R.id.textStatus);
+        Button buttonLogout = (Button) findViewById(R.id.buttonLogout);
 
         //SQLite database handler
         db = new SQLiteHandler(getApplicationContext());
@@ -45,9 +41,9 @@ public class MainActivity extends Activity {
         //Fetch user details from SQLite
         HashMap<String, String> user = db.getUserDetails();
 
-        String userEmail = user.get("userEmail");
-        String userRole = user.get("userRole");
-        String userStatus = user.get("userStatus");
+        String userEmail = "Registered Email: " + user.get("userEmail");
+        String userRole = "Role: " + user.get("userRole");
+        String userStatus = "Status: " + user.get("userStatus");
 
         //Display user details
         textEmail.setText(userEmail);

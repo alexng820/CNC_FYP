@@ -29,8 +29,6 @@ import fyp.cnc.cnc_fyp.helper.SessionManager;
 
 public class LoginActivity extends Activity {
     private static final String TAG = RegisterActivity.class.getSimpleName();
-    private Button buttonLogin;
-    private Button buttonLinkToRegister;
     private EditText inputUserEmail;
     private EditText inputUserPass;
     private ProgressDialog progressDialog;
@@ -44,8 +42,8 @@ public class LoginActivity extends Activity {
 
         inputUserEmail = (EditText) findViewById(R.id.userEmail);
         inputUserPass = (EditText) findViewById(R.id.userPass);
-        buttonLogin = (Button) findViewById(R.id.buttonLogin);
-        buttonLinkToRegister = (Button) findViewById(R.id.buttonToRegister);
+        Button buttonLogin = (Button) findViewById(R.id.buttonLogin);
+        Button buttonLinkToRegister = (Button) findViewById(R.id.buttonToRegister);
 
         //Progress dialog
         progressDialog = new ProgressDialog(this);
@@ -103,7 +101,7 @@ public class LoginActivity extends Activity {
         StringRequest strRequest = new StringRequest(Method.POST, AppConfig.URL_LOGIN, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.d(TAG, "Login Response: " + response.toString());
+                Log.d(TAG, "Login Response: " + response);
                 hideDialog();
 
                 try {
@@ -150,7 +148,7 @@ public class LoginActivity extends Activity {
             @Override
             protected Map<String, String> getParams() {
                 //Post parameters to login URL
-                Map<String, String> params = new HashMap<String, String>();
+                Map<String, String> params = new HashMap<>();
                 params.put("userEmail", userEmail);
                 params.put("userPass", userPass);
 

@@ -30,13 +30,10 @@ import fyp.cnc.cnc_fyp.helper.SessionManager;
 
 public class RegisterActivity extends Activity {
     private static final String TAG = RegisterActivity.class.getSimpleName();
-    private Button buttonRegister;
-    private Button buttonLinkToLogin;
     private EditText inputUserEmail;
     private EditText inputUserPass;
     private EditText inputConfirmPass;
     private ProgressDialog progressDialog;
-    private SessionManager session;
     private SQLiteHandler db;
 
     @Override
@@ -47,15 +44,15 @@ public class RegisterActivity extends Activity {
         inputUserEmail = (EditText) findViewById(R.id.userEmail);
         inputUserPass = (EditText) findViewById(R.id.userPass);
         inputConfirmPass = (EditText) findViewById(R.id.userConfirmPass);
-        buttonRegister = (Button) findViewById(R.id.buttonRegister);
-        buttonLinkToLogin = (Button) findViewById(R.id.buttonLinkToLogin);
+        Button buttonRegister = (Button) findViewById(R.id.buttonRegister);
+        Button buttonLinkToLogin = (Button) findViewById(R.id.buttonLinkToLogin);
 
         //Progress dialog
         progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
 
         //Session manager
-        session = new SessionManager(getApplicationContext());
+        SessionManager session = new SessionManager(getApplicationContext());
 
         //SQLite database handler
         db = new SQLiteHandler(getApplicationContext());
@@ -113,7 +110,7 @@ public class RegisterActivity extends Activity {
         StringRequest strRequest = new StringRequest(Request.Method.POST, AppConfig.URL_REGISTER, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.d(TAG, "Register Response: " + response.toString());
+                Log.d(TAG, "Register Response: " + response);
                 hideDialog();
 
                 try {
@@ -158,7 +155,7 @@ public class RegisterActivity extends Activity {
             @Override
             protected Map<String, String> getParams() {
                 //Post parameters to login URL
-                Map<String, String> params = new HashMap<String, String>();
+                Map<String, String> params = new HashMap<>();
                 params.put("userEmail", userEmail);
                 params.put("userPass", userPass);
 
