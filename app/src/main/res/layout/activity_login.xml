@@ -22,7 +22,7 @@
             android:layout_marginBottom="10dp"
             android:background="@color/input_background"
             android:hint="@string/hint_userEmail"
-            android:inputType="text"
+            android:inputType="textEmailAddress"
             android:padding="10dp"
             android:textColor="@color/input"
             android:textColorHint="@color/input_hint" />
@@ -61,5 +61,4 @@
             android:textColor="@color/white"
             android:textSize="15sp" />
     </LinearLayout>
-
 </LinearLayout>
