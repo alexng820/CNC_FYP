@@ -1,92 +1,77 @@
 package fyp.cnc.cnc_fyp.activity;
 
-import android.support.v7.app.AppCompatActivity;
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.util.HashMap;
 
 import fyp.cnc.cnc_fyp.R;
+import fyp.cnc.cnc_fyp.helper.SQLiteHandler;
+import fyp.cnc.cnc_fyp.helper.SessionManager;
 
-public class MainActivity extends AppCompatActivity {
-    String json_string=null;
+public class MainActivity extends Activity {
+    private TextView textEmail;
+    private TextView textRole;
+    private TextView textStatus;
+    private Button buttonLogout;
+
+    private SQLiteHandler db;
+    private SessionManager session;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        TextView tv_test=(TextView)findViewById(R.id.tv_test);
-        Thread thread = new Thread(get_json);
-        thread.start();
-        tv_test.setText(json_string);
-    }
-    private Runnable get_json = new Runnable() {
-        public void run() {
-            // 運行網路連線的程式
-            JSONObject temp = get_data();
 
-            try {
-                json_string = temp.getString("1");
-            } catch (Exception e) {
-                Log.e("JSON Parser", "Error due tuen to a string ");
-                json_string="f";
-            }
+        textEmail = (TextView) findViewById(R.id.textEmail);
+        textRole = (TextView) findViewById(R.id.textRole);
+        textStatus = (TextView) findViewById(R.id.textStatus);
+        buttonLogout = (Button) findViewById(R.id.buttonLogout);
 
+        //SQLite database handler
+        db = new SQLiteHandler(getApplicationContext());
+
+        //Session manager
+        session = new SessionManager(getApplicationContext());
+
+        if (!session.isLoggedIn()) {
+            logoutUser();
         }
-    };
-    public JSONObject get_data() {
-        InputStream is;
-        JSONObject json = null;
-        String output = "";
-        URL _url;
-        HttpURLConnection urlConnection;
-        try {
-            _url = new URL("http://35.167.144.165/test.php");
-            urlConnection = (HttpURLConnection) _url.openConnection();
-        }
-        catch (MalformedURLException e) {
-            Log.e("JSON Parser", "Error due to a malformed URL " + e.toString());
-            return null;
-        }
-        catch (IOException e) {
-            Log.e("JSON Parser", "IO error " + e.toString());
-            return null;
-        }
-        try {
-            is = new BufferedInputStream(urlConnection.getInputStream());
-            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-            StringBuilder total = new StringBuilder(is.available());
-            String line;
-            while ((line = reader.readLine()) != null) {
-                total.append(line).append('\n');
+
+        //Fetch user details from SQLite
+        HashMap<String, String> user = db.getUserDetails();
+
+        String userEmail = user.get("userEmail");
+        String userRole = user.get("userRole");
+        String userStatus = user.get("userStatus");
+
+        //Display user details
+        textEmail.setText(userEmail);
+        textRole.setText(userRole);
+        textStatus.setText(userStatus);
+
+        //Logout button onClick event
+        buttonLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                logoutUser();
             }
-            output = total.toString();
-        }
-        catch (IOException e) {
-            Log.e("JSON Parser", "IO error " + e.toString());
-            return null;
-        }
-        finally{
-            urlConnection.disconnect();
-        }
-        try {
-            json = new JSONObject(output);
-        }
-        catch (JSONException e) {
-            Log.e("JSON Parser", "Error parsing data " + e.toString());
-        }
-        return json;
+        });
     }
 
+    //Log out user
+    private void logoutUser() {
+        session.setLogin(false);
 
+        db.deleteUsers();
+
+        //Link to login
+        Intent i = new Intent(MainActivity.this, LoginActivity.class);
+        startActivity(i);
+        finish();
+    }
 }
