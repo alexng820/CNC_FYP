@@ -115,12 +115,15 @@ public class LoginActivity extends Activity {
 
                         //Store the ser in SQLite
                         JSONObject user = jsonObject.getJSONObject("user");
-                        String userEmail = user.getString("userEmail");
+                        String userID = user.getString("userID");
+                        String userName = user.getString("userName");
+                        String userGender = user.getString("userGender");
                         String userRole = user.getString("userRole");
                         String userStatus = user.getString("userStatus");
+                        String userEmail = user.getString("userEmail");
 
                         //Insert row to user table
-                        db.addUser(userEmail, userRole, userStatus);
+                        db.addUser(userID, userName, userGender, userRole, userStatus, userEmail);
 
                         //Launch main activity
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
