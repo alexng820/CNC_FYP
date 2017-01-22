@@ -13,4 +13,10 @@
     <string name="button_link_register">Not a member? Sign up</string>
 
     <string name="welcome">WELCOME</string>
+    <string name="title_activity_class_schedule">Class_scheduleActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
 </resources>
