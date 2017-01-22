@@ -23,9 +23,12 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        TextView textEmail = (TextView) findViewById(R.id.textEmail);
+        TextView textUserID = (TextView) findViewById(R.id.textUserID);
+        TextView textName = (TextView) findViewById(R.id.textName);
+        TextView textGender = (TextView) findViewById(R.id.textGender);
         TextView textRole = (TextView) findViewById(R.id.textRole);
         TextView textStatus = (TextView) findViewById(R.id.textStatus);
+        TextView textEmail = (TextView) findViewById(R.id.textEmail);
         Button buttonLogout = (Button) findViewById(R.id.buttonLogout);
 
         //SQLite database handler
@@ -42,11 +45,17 @@ public class MainActivity extends Activity {
         HashMap<String, String> user = db.getUserDetails();
 
         String userEmail = "Registered Email: " + user.get("userEmail");
+        String userID = "ID: " + user.get("userID");
+        String userName = "Name: " + user.get("userName");
+        String userGender = "Gender: " + user.get("userGender");
         String userRole = "Role: " + user.get("userRole");
         String userStatus = "Status: " + user.get("userStatus");
 
         //Display user details
         textEmail.setText(userEmail);
+        textUserID.setText(userID);
+        textName.setText(userName);
+        textGender.setText(userGender);
         textRole.setText(userRole);
         textStatus.setText(userStatus);
 
