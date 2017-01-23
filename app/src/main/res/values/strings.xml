@@ -1,18 +1,12 @@
 <resources>
     <string name="app_name">CNC_FYP</string>
 
-    <string name="hint_userEmail">User Email</string>
+    <string name="hint_userID">Student ID</string>
     <string name="hint_password">Password</string>
-    <string name="hint_confirmPassword">Confirm Password</string>
 
     <string name="button_login">LOGIN</string>
-    <string name="button_register">REGISTER</string>
     <string name="button_logout">LOGOUT</string>
 
-    <string name="button_link_login">Already registered? Login</string>
-    <string name="button_link_register">Not a member? Sign up</string>
-
-    <string name="welcome">WELCOME</string>
     <string name="title_activity_class_schedule">Class_scheduleActivity</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
