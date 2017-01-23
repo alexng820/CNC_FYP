@@ -24,7 +24,7 @@ public class TestActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_test);
         TextView tv_test=(TextView)findViewById(R.id.tv_test);
         Thread thread = new Thread(get_json);
         thread.start();
