@@ -7,4 +7,10 @@
             android:title="Class Schedule" />
     </group>
 
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/drawer_class_logout_button"
+            android:title="@string/button_logout" />
+    </group>
+
 </menu>

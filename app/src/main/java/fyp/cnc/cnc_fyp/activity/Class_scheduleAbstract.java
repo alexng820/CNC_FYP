@@ -9,8 +9,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.TypedValue;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -28,6 +26,7 @@ import java.util.Locale;
 
 import fyp.cnc.cnc_fyp.R;
 import fyp.cnc.cnc_fyp.helper.SQLiteHandler;
+import fyp.cnc.cnc_fyp.helper.SessionManager;
 
 /**
  * Created by Alex Ng on 21/1/2017.
@@ -41,6 +40,7 @@ public abstract class Class_scheduleAbstract  extends AppCompatActivity implemen
     private WeekView mWeekView;
 
     private SQLiteHandler db;
+    private SessionManager session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +73,11 @@ public abstract class Class_scheduleAbstract  extends AppCompatActivity implemen
         mWeekView.setEmptyViewLongPressListener(this);
         mWeekView.setHourHeight(10);
         setupDateTimeInterpreter(false);
+
+        session = new SessionManager(getApplicationContext());
+        if (!session.isLoggedIn()) {
+            logoutUser();
+        }
     }
 
 
@@ -97,6 +102,10 @@ public abstract class Class_scheduleAbstract  extends AppCompatActivity implemen
         if (id == R.id.drawer_class_schedule_button) {
             Intent intent = new Intent(this, Class_scheduleActivity.class);
             startActivity(intent);
+        }
+
+        if (id == R.id.drawer_class_logout_button) {
+            logoutUser();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -153,5 +162,15 @@ public abstract class Class_scheduleAbstract  extends AppCompatActivity implemen
 
     public WeekView getWeekView() {
         return mWeekView;
+    }
+
+    private void logoutUser() {
+        session.setLogin(false);
+
+        db.deleteUsers();
+
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+        finish();
     }
 }
