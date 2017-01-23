@@ -22,14 +22,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import fyp.cnc.cnc_fyp.R;
-import fyp.cnc.cnc_fyp.app.AppConfig;
-import fyp.cnc.cnc_fyp.app.AppController;
+import fyp.cnc.cnc_fyp.helper.AppController;
 import fyp.cnc.cnc_fyp.helper.SQLiteHandler;
 import fyp.cnc.cnc_fyp.helper.SessionManager;
 
 public class LoginActivity extends Activity {
-    private static final String TAG = RegisterActivity.class.getSimpleName();
-    private EditText inputUserEmail;
+    private static final String TAG = LoginActivity.class.getSimpleName();
+    private static final String URL_LOGIN = "http://35.167.144.165/login.php";
+    private EditText inputUserID;
     private EditText inputUserPass;
     private ProgressDialog progressDialog;
     private SessionManager session;
@@ -40,10 +40,9 @@ public class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        inputUserEmail = (EditText) findViewById(R.id.userEmail);
+        inputUserID = (EditText) findViewById(R.id.userID);
         inputUserPass = (EditText) findViewById(R.id.userPass);
         Button buttonLogin = (Button) findViewById(R.id.buttonLogin);
-        Button buttonLinkToRegister = (Button) findViewById(R.id.buttonToRegister);
 
         //Progress dialog
         progressDialog = new ProgressDialog(this);
@@ -66,39 +65,30 @@ public class LoginActivity extends Activity {
         //Login button onClick event
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                String userEmail = inputUserEmail.getText().toString().trim();
+                String userID = inputUserID.getText().toString().trim();
                 String userPass = inputUserPass.getText().toString().trim();
 
                 //Check for empty data in form
-                if (!userEmail.isEmpty() && !userPass.isEmpty()) {
+                if (!userID.isEmpty() && !userPass.isEmpty()) {
                     //Login
-                    checkLogin(userEmail, userPass);
+                    checkLogin(userID, userPass);
                 } else {
                     //Required credentials are missing
                     Toast.makeText(getApplicationContext(), "Please enter your login credentials.", Toast.LENGTH_LONG).show();
                 }
             }
         });
-
-        //Link to register
-        buttonLinkToRegister.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), RegisterActivity.class);
-                startActivity(i);
-                finish();
-            }
-        });
     }
 
     //Verify login details
-    private void checkLogin(final String userEmail, final String userPass) {
+    private void checkLogin(final String userID, final String userPass) {
         //Tag used to cancel the request
         String tag_string_req = "req_login";
 
         progressDialog.setMessage("Logging in...");
         showDialog();
 
-        StringRequest strRequest = new StringRequest(Method.POST, AppConfig.URL_LOGIN, new Response.Listener<String>() {
+        StringRequest strRequest = new StringRequest(Method.POST, URL_LOGIN, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.d(TAG, "Login Response: " + response);
@@ -120,13 +110,12 @@ public class LoginActivity extends Activity {
                         String userGender = user.getString("userGender");
                         String userRole = user.getString("userRole");
                         String userStatus = user.getString("userStatus");
-                        String userEmail = user.getString("userEmail");
 
                         //Insert row to user table
-                        db.addUser(userID, userName, userGender, userRole, userStatus, userEmail);
+                        db.addUser(userID, userName, userGender, userRole, userStatus);
 
                         //Launch main activity
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        Intent intent = new Intent(LoginActivity.this, Class_scheduleActivity.class);
                         startActivity(intent);
                         finish();
                     } else {
@@ -152,7 +141,7 @@ public class LoginActivity extends Activity {
             protected Map<String, String> getParams() {
                 //Post parameters to login URL
                 Map<String, String> params = new HashMap<>();
-                params.put("userEmail", userEmail);
+                params.put("userID", userID);
                 params.put("userPass", userPass);
 
                 return params;

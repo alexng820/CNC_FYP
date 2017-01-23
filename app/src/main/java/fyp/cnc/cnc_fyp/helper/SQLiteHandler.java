@@ -31,7 +31,6 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     private static final String KEY_GENDER = "gender";
     private static final String KEY_ROLE = "role";
     private static final String KEY_STATUS = "status";
-    private static final String KEY_EMAIL = "email";
 
     public SQLiteHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -41,12 +40,11 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String CREATE_LOGIN_TABLE = "CREATE TABLE " + TABLE_USER + "(" + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + KEY_USER_ID + " INTEGER, "
+                + KEY_USER_ID + " CHAR(9), "
                 + KEY_NAME + " VARCHAR(25), "
                 + KEY_GENDER + " CHAR, "
                 + KEY_ROLE + " VARCHAR(25), "
-                + KEY_STATUS + " VARCHAR(25), "
-                + KEY_EMAIL + " VARCHAR(50))";
+                + KEY_STATUS + " VARCHAR(25))";
         db.execSQL(CREATE_LOGIN_TABLE);
 
         Log.d(TAG, "Database table created.");
@@ -63,7 +61,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     }
 
     //Storing user details in database
-    public void addUser(String userID, String userName, String userGender, String userRole, String userStatus, String userEmail) {
+    public void addUser(String userID, String userName, String userGender, String userRole, String userStatus) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -72,7 +70,6 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         values.put(KEY_GENDER, userGender);
         values.put(KEY_ROLE, userRole);
         values.put(KEY_STATUS, userStatus);
-        values.put(KEY_EMAIL, userEmail);
 
         //Inserting row
         long id = db.insert(TABLE_USER, null, values);
@@ -97,7 +94,6 @@ public class SQLiteHandler extends SQLiteOpenHelper {
             user.put("userGender", cursor.getString(3));
             user.put("userRole", cursor.getString(4));
             user.put("userStatus", cursor.getString(5));
-            user.put("userEmail", cursor.getString(6));
         }
         cursor.close();
         db.close();
