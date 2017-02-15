@@ -1,5 +1,6 @@
 package fyp.cnc.cnc_fyp.activity;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.RectF;
 import android.os.Bundle;
@@ -7,6 +8,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -58,14 +60,14 @@ public abstract class Class_scheduleAbstract  extends AppCompatActivity implemen
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         View hView =  navigationView.getHeaderView(0);
-        db = new SQLiteHandler(getApplicationContext());
-        HashMap<String, String> user = db.getUserDetails();
-        TextView nav_username=(TextView) hView.findViewById(R.id.nav_username);
-        TextView nav_useremail=(TextView) hView.findViewById(R.id.nav_useremail);
-        String userName = user.get("userName");
-        String userEmail = user.get("userEmail");
-        nav_username.setText(userName);
-        nav_useremail.setText(userEmail);
+//        db = new SQLiteHandler(getApplicationContext());
+//        HashMap<String, String> user = db.getUserDetails();
+//        TextView nav_username=(TextView) hView.findViewById(R.id.nav_username);
+//        TextView nav_useremail=(TextView) hView.findViewById(R.id.nav_useremail);
+//        String userName = user.get("userName");
+//        String userEmail = user.get("userEmail");
+//        nav_username.setText(userName);
+//        nav_useremail.setText(userEmail);
         mWeekView = (WeekView) findViewById(R.id.weekView);
         mWeekView.setOnEventClickListener(this);
         mWeekView.setMonthChangeListener(this);
@@ -147,17 +149,19 @@ public abstract class Class_scheduleAbstract  extends AppCompatActivity implemen
 
     @Override
     public void onEventClick(WeekViewEvent event, RectF eventRect) {
-        Toast.makeText(this, event.getName(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onEventLongPress(WeekViewEvent event, RectF eventRect) {
-        Toast.makeText(this, "Long pressed event: " + event.getName(), Toast.LENGTH_SHORT).show();
+        AlertDialog.Builder MyAlertDialog = new AlertDialog.Builder(this);
+        MyAlertDialog.setTitle("Detail");
+        String msg="Course ID:"+event.getName().split(" - ")[0]+"\nSection:"+event.getName().split(" - ")[1]+"\nLocation:"+event.getName().split(" - ")[2]+"\nInstructor:"+event.getLocation() ;
+        MyAlertDialog.setMessage(msg);
+        MyAlertDialog.show();
     }
 
     @Override
     public void onEmptyViewLongPress(Calendar time) {
-        Toast.makeText(this, "Empty view long pressed: " + getEventTitle(time), Toast.LENGTH_SHORT).show();
     }
 
     public WeekView getWeekView() {
