@@ -60,7 +60,7 @@ public abstract class Class_scheduleAbstract  extends AppCompatActivity implemen
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         View hView =  navigationView.getHeaderView(0);
-//        db = new SQLiteHandler(getApplicationContext());
+        db = new SQLiteHandler(getApplicationContext());
 //        HashMap<String, String> user = db.getUserDetails();
 //        TextView nav_username=(TextView) hView.findViewById(R.id.nav_username);
 //        TextView nav_useremail=(TextView) hView.findViewById(R.id.nav_useremail);
