@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/drawer_class_schedule_button"
+            android:title="Class Schedule" />
+    </group>
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/drawer_class_logout_button"
+            android:title="@string/button_logout" />
+    </group>
+
+</menu>
