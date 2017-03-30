@@ -8,6 +8,7 @@
     <string name="button_logout">LOGOUT</string>
 
     <string name="title_activity_class_schedule">Class_scheduleActivity</string>
+    <string name="title_activity_main">Class_mainActivity</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
