@@ -12,8 +12,18 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="fyp.cnc.cnc_fyp.activity.NavBarTemplate"
     tools:showIn="@layout/navbartemplate_toolbar">
-    <TextView
-        android:layout_width="wrap_content"
+
+    <LinearLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="android.studio@android.com" />
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp" >
+
+        <WebView
+            android:id="@+id/news_container"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 </RelativeLayout>

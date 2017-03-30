@@ -28,7 +28,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.NavBarTemplate"
-            android:label="@string/title_activity_main"
+            android:label="@string/title_activity_news"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

@@ -57,7 +57,7 @@ public class LoginActivity extends Activity {
         //Check if user is already logged in or not
         if (session.isLoggedIn()) {
             //User is already logged in
-            Intent intent = new Intent(LoginActivity.this, NavBarTemplate.class);
+            Intent intent = new Intent(LoginActivity.this, Class_scheduleActivity.class);
             startActivity(intent);
             finish();
         }

@@ -1,6 +1,5 @@
 package fyp.cnc.cnc_fyp.activity;
 
-import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.RectF;
 import android.os.Bundle;
@@ -13,8 +12,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.alamkanak.weekview.DateTimeInterpreter;
 import com.alamkanak.weekview.MonthLoader;
@@ -23,7 +20,6 @@ import com.alamkanak.weekview.WeekViewEvent;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.Locale;
 
 import fyp.cnc.cnc_fyp.R;
@@ -104,6 +100,13 @@ public abstract class Class_scheduleAbstract  extends AppCompatActivity implemen
         if (id == R.id.drawer_class_schedule_button) {
             Intent intent = new Intent(this, Class_scheduleActivity.class);
             startActivity(intent);
+            finish();
+        }
+
+        if (id == R.id.drawer_class_news_button) {
+            Intent intent = new Intent(this, NavBarTemplate.class);
+            startActivity(intent);
+            finish();
         }
 
         if (id == R.id.drawer_class_logout_button) {

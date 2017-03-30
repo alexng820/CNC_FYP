@@ -7,8 +7,11 @@
     <string name="button_login">LOGIN</string>
     <string name="button_logout">LOGOUT</string>
 
-    <string name="title_activity_class_schedule">Class_scheduleActivity</string>
-    <string name="title_activity_main">Class_mainActivity</string>
+    <string name="button_refresh_news">Retrieve News</string>
+    <string name="button_news">University News</string>
+
+    <string name="title_activity_class_schedule">Class Schedule</string>
+    <string name="title_activity_news">University Latest Press Release</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
