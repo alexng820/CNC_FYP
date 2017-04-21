@@ -70,6 +70,7 @@ public abstract class Class_scheduleAbstract  extends AppCompatActivity implemen
         mWeekView.setEventLongPressListener(this);
         mWeekView.setEmptyViewLongPressListener(this);
         mWeekView.setHourHeight(10);
+
         setupDateTimeInterpreter(false);
 
         session = new SessionManager(getApplicationContext());
@@ -129,7 +130,7 @@ public abstract class Class_scheduleAbstract  extends AppCompatActivity implemen
             public String interpretDate(Calendar date) {
                 SimpleDateFormat weekdayNameFormat = new SimpleDateFormat("EEE", Locale.getDefault());
                 String weekday = weekdayNameFormat.format(date.getTime());
-                SimpleDateFormat format = new SimpleDateFormat(" M/d", Locale.getDefault());
+                SimpleDateFormat format = new SimpleDateFormat(" d/M", Locale.getDefault());
 
                 // All android api level do not have a standard way of getting the first letter of
                 // the week day name. Hence we get the first char programmatically.
@@ -158,7 +159,7 @@ public abstract class Class_scheduleAbstract  extends AppCompatActivity implemen
     public void onEventLongPress(WeekViewEvent event, RectF eventRect) {
         AlertDialog.Builder MyAlertDialog = new AlertDialog.Builder(this);
         MyAlertDialog.setTitle("Detail");
-        String msg="Course ID:"+event.getName().split(" - ")[0]+"\nSection:"+event.getName().split(" - ")[1]+"\nLocation:"+event.getName().split(" - ")[2]+"\nInstructor:"+event.getLocation() ;
+        String msg="Course ID:"+event.getName().split("_")[0]+"\nSection:"+event.getName().split("_")[1]+"\nLocation:"+event.getName().split("_")[2]+"\nInstructor:"+event.getLocation() ;
         MyAlertDialog.setMessage(msg);
         MyAlertDialog.show();
     }
