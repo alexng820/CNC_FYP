@@ -109,6 +109,12 @@ public abstract class Class_scheduleAbstract  extends AppCompatActivity implemen
             startActivity(intent);
             finish();
         }
+        if (id == R.id.drawer_class_event_button) {
+            Intent intent = new Intent(this, Event_listActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
 
         if (id == R.id.drawer_class_logout_button) {
             logoutUser();
