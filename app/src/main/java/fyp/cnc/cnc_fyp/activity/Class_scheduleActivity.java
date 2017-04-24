@@ -1,16 +1,8 @@
 package fyp.cnc.cnc_fyp.activity;
 
-import android.content.Intent;
 import android.graphics.Color;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.alamkanak.weekview.WeekViewEvent;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -18,21 +10,15 @@ import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import fyp.cnc.cnc_fyp.helper.AppController;
 import fyp.cnc.cnc_fyp.helper.SQLiteHandler;
-import fyp.cnc.cnc_fyp.helper.SessionManager;
 
 
 public class Class_scheduleActivity extends Class_scheduleAbstract {
@@ -60,10 +46,10 @@ public class Class_scheduleActivity extends Class_scheduleAbstract {
             JSONObject jsobject = new JSONObject(reader.readLine());
 
             section_list = jsobject.getJSONArray("section");
-            finish++;
         }catch( Exception e) {
             e.printStackTrace();
         }
+        finish++;
 
 
         return section_list;
@@ -83,10 +69,10 @@ public class Class_scheduleActivity extends Class_scheduleAbstract {
 
 
             holidays =  new JSONArray(reader.readLine());
-            finish++;
         }catch( Exception e) {
             e.printStackTrace();
         }
+        finish++;
 
 
         return holidays;
@@ -107,10 +93,10 @@ public class Class_scheduleActivity extends Class_scheduleAbstract {
             JSONObject jsobject = new JSONObject(reader.readLine());
 
             term = jsobject.getJSONObject("term");
-            finish++;
         }catch( Exception e) {
             e.printStackTrace();
         }
+        finish++;
 
 
         return term;
@@ -195,65 +181,66 @@ public class Class_scheduleActivity extends Class_scheduleAbstract {
             e.printStackTrace();
         }
         if(term_start_year<=newYear&&newYear<=term_end_year&&term_start_month<=newMonth&&newMonth<=term_end_month) {
-            for (int i = 0; i < section_list.length(); i++) {
-                String section_code = null;
-                int weekday = 0;
-                String starthr = null;
-                String endhr = null;
-                String startmin = null;
-                String endmin = null;
-                String location = null;
-                String tearcher = null;
-                try {
-                    JSONObject section = section_list.getJSONObject(i);
-                    section_code = section.getString("section_code");
-                    weekday = section.getInt("weekday");
-                    starthr = section.getString("starttime").split(":")[0];
-                    endhr = section.getString("endtime").split(":")[0];
-                    startmin = section.getString("starttime").split(":")[1];
-                    endmin = section.getString("endtime").split(":")[1];
-                    location = section.getString("location");
-                    tearcher = section.getString("tearcher");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                Calendar cal = Calendar.getInstance();
-                cal.set(Calendar.YEAR, newYear);
-                cal.set(Calendar.MONTH, newMonth - 1);
-                int week = cal.getActualMaximum(Calendar.WEEK_OF_MONTH);
-
-                for (int j = 1; j <= week - 1; j++) {
-
-                    if(term_start_year>=newYear&&term_start_month>=newMonth&&term_start_week>=j){
-                        continue;
+            if(section_list!=null){
+                for (int i = 0; i < section_list.length(); i++) {
+                    String section_code = null;
+                    int weekday = 0;
+                    String starthr = null;
+                    String endhr = null;
+                    String startmin = null;
+                    String endmin = null;
+                    String location = null;
+                    String tearcher = null;
+                    try {
+                        JSONObject section = section_list.getJSONObject(i);
+                        section_code = section.getString("section_code");
+                        weekday = section.getInt("weekday");
+                        starthr = section.getString("starttime").split(":")[0];
+                        endhr = section.getString("endtime").split(":")[0];
+                        startmin = section.getString("starttime").split(":")[1];
+                        endmin = section.getString("endtime").split(":")[1];
+                        location = section.getString("location");
+                        tearcher = section.getString("tearcher");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                    if(term_end_year<=newYear&&term_end_month<=newMonth&&term_end_week<j){
-                        continue;
-                    }
-                    int isholiday=-1;
-                    for(int k=0;k<holiday_week.size();k++){
-                        if(holiday_week.get(k)==j){
-                            if(holiday_weekday.get(k)==weekday+1){
-                                isholiday=k;
+                    Calendar cal = Calendar.getInstance();
+                    cal.set(Calendar.YEAR, newYear);
+                    cal.set(Calendar.MONTH, newMonth - 1);
+                    int week = cal.getActualMaximum(Calendar.WEEK_OF_MONTH);
+
+                    for (int j = 1; j <= week - 1; j++) {
+
+                        if (term_start_year >= newYear && term_start_month >= newMonth && term_start_week >= j) {
+                            continue;
+                        }
+                        if (term_end_year <= newYear && term_end_month <= newMonth && term_end_week < j) {
+                            continue;
+                        }
+                        int isholiday = -1;
+                        for (int k = 0; k < holiday_week.size(); k++) {
+                            if (holiday_week.get(k) == j) {
+                                if (holiday_weekday.get(k) == weekday + 1) {
+                                    isholiday = k;
+                                }
                             }
                         }
-                    }
-                    if(isholiday==-1) {
-                        startTime = Calendar.getInstance();
-                        startTime.set(Calendar.WEEK_OF_MONTH, j);
-                        startTime.set(Calendar.DAY_OF_WEEK, weekday+1);
-                        startTime.set(Calendar.HOUR_OF_DAY, Integer.parseInt(starthr));
-                        startTime.set(Calendar.MINUTE, Integer.parseInt(startmin));
-                        startTime.set(Calendar.MONTH, newMonth - 1);
-                        startTime.set(Calendar.YEAR, newYear);
-                        endTime = (Calendar) startTime.clone();
-                        endTime.set(Calendar.HOUR_OF_DAY, Integer.parseInt(endhr));
-                        endTime.set(Calendar.MINUTE, Integer.parseInt(endmin));
-                        event = new WeekViewEvent(1,  section_code + "_" + location, tearcher, startTime, endTime);
+                        if (isholiday == -1) {
+                            startTime = Calendar.getInstance();
+                            startTime.set(Calendar.WEEK_OF_MONTH, j);
+                            startTime.set(Calendar.DAY_OF_WEEK, weekday + 1);
+                            startTime.set(Calendar.HOUR_OF_DAY, Integer.parseInt(starthr));
+                            startTime.set(Calendar.MINUTE, Integer.parseInt(startmin));
+                            startTime.set(Calendar.MONTH, newMonth - 1);
+                            startTime.set(Calendar.YEAR, newYear);
+                            endTime = (Calendar) startTime.clone();
+                            endTime.set(Calendar.HOUR_OF_DAY, Integer.parseInt(endhr));
+                            endTime.set(Calendar.MINUTE, Integer.parseInt(endmin));
+                            event = new WeekViewEvent(1, section_code + "_" + location, tearcher, startTime, endTime);
 
-                        events.add(event);
+                            events.add(event);
+                        }
                     }
-
                 }
             }
         }
