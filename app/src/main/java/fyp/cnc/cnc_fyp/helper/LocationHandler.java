@@ -26,7 +26,7 @@ import fyp.cnc.cnc_fyp.activity.PermissionActivity;
 
 public class LocationHandler extends Service {
     private static final String TAG = LocationHandler.class.getSimpleName();
-    private static final int LOCATION_INTERVAL = 5 * 60 * 1000; //5 minutes
+    private static final int LOCATION_INTERVAL = 15 * 60 * 1000; //15 minutes
     private static final float LOCATION_DISTANCE = 10f;
     private static final String API_KEY = "AIzaSyCfMMMtkpy5nEqI8Vm4GcHvQX_M0LpTz7w"; //API key for Google Direction API
 
