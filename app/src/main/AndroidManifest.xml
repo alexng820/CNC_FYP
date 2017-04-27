@@ -3,6 +3,8 @@
     package="fyp.cnc.cnc_fyp">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:name=".helper.AppController"
@@ -27,13 +29,22 @@
             android:label="@string/title_activity_class_schedule"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activity.NavBarTemplate"
+            android:name=".activity.PressNewsActivity"
             android:label="@string/title_activity_news"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.Event_listActivity"
             android:label="@string/title_activity_event_list"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-    </application>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.PermissionActivity"
+            android:label="@string/title_activity_permissionActivity" />
 
+        <service
+            android:name=".helper.LocationHandler"
+            android:exported="false" />
+        <service
+            android:name=".helper.ClassAlertManager"
+            android:exported="false" />
+    </application>
 </manifest>
