@@ -11,8 +11,8 @@
     tools:context="fyp.cnc.cnc_fyp.activity.TestActivity">
 
     <TextView
+        android:id="@+id/tv_test"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        android:id="@+id/tv_test" />
+        android:text="Hello World!" />
 </RelativeLayout>

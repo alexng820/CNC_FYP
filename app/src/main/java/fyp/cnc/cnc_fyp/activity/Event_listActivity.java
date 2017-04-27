@@ -2,9 +2,7 @@ package fyp.cnc.cnc_fyp.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.View;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -18,11 +16,10 @@ import fyp.cnc.cnc_fyp.R;
 import fyp.cnc.cnc_fyp.helper.SQLiteHandler;
 import fyp.cnc.cnc_fyp.helper.SessionManager;
 
-public class Event_listActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
-
+public class Event_listActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private SQLiteHandler db;
     private SessionManager session;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,8 +29,7 @@ public class Event_listActivity extends AppCompatActivity
         db = new SQLiteHandler(getApplicationContext());
         session = new SessionManager(getApplicationContext());
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
@@ -75,7 +71,7 @@ public class Event_listActivity extends AppCompatActivity
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
@@ -86,7 +82,7 @@ public class Event_listActivity extends AppCompatActivity
         }
 
         if (id == R.id.drawer_class_news_button) {
-            Intent intent = new Intent(this, NavBarTemplate.class);
+            Intent intent = new Intent(this, PressNewsActivity.class);
             startActivity(intent);
             finish();
         }
@@ -95,7 +91,6 @@ public class Event_listActivity extends AppCompatActivity
             startActivity(intent);
             finish();
         }
-
 
         if (id == R.id.drawer_class_logout_button) {
             logoutUser();
