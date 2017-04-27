@@ -9,7 +9,7 @@
     tools:openDrawer="start">
 
     <include
-        layout="@layout/navbartemplate_toolbar"
+        layout="@layout/news_toolbar"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
@@ -19,7 +19,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
-        app:headerLayout="@layout/navbartemplate_header"
-        app:menu="@menu/navbartemplate_drawer" />
+        app:headerLayout="@layout/news_header"
+        app:menu="@menu/news_drawer" />
 
 </android.support.v4.widget.DrawerLayout>

@@ -3,6 +3,7 @@ package fyp.cnc.cnc_fyp.activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -22,7 +23,7 @@ import fyp.cnc.cnc_fyp.R;
 import fyp.cnc.cnc_fyp.helper.SQLiteHandler;
 import fyp.cnc.cnc_fyp.helper.SessionManager;
 
-public class NavBarTemplate extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class PressNewsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final String URL_NEWS = "http://www.ouhk.edu.hk/wcsprd/Satellite?pagename=OUHK/tcPortalPage2014&CCNAME=CCNEWS&YEAR=2017&dis=11&pri=0&LANG=eng";
     private SQLiteHandler db;
     private SessionManager session;
@@ -30,7 +31,7 @@ public class NavBarTemplate extends AppCompatActivity implements NavigationView.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.navbartemplate);
+        setContentView(R.layout.news);
 
         new News().execute();
 
@@ -56,12 +57,65 @@ public class NavBarTemplate extends AppCompatActivity implements NavigationView.
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.drawer_class_schedule_button) {
+            Intent intent = new Intent(this, Class_scheduleActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
+        if (id == R.id.drawer_class_news_button) {
+            Intent intent = new Intent(this, PressNewsActivity.class);
+            startActivity(intent);
+            finish();
+        }
+        if (id == R.id.drawer_class_event_button) {
+            Intent intent = new Intent(this, Event_listActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
+        if (id == R.id.drawer_class_logout_button) {
+            logoutUser();
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    private void logoutUser() {
+        session.setLogin(false);
+
+        db.deleteUsers();
+
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
     // Description AsyncTask
     private class News extends AsyncTask<Void, Void, Void> {
         String link;
 
         @Override
-        protected void onPreExecute() {}
+        protected void onPreExecute() {
+        }
 
         @Override
         protected Void doInBackground(Void... params) {
@@ -85,62 +139,8 @@ public class NavBarTemplate extends AppCompatActivity implements NavigationView.
                 public boolean shouldOverrideUrlLoading(WebView view, String url) {
                     view.loadUrl(url);
                     return true;
-
                 }
             });
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.drawer_class_schedule_button) {
-            Intent intent = new Intent(this, Class_scheduleActivity.class);
-            startActivity(intent);
-            finish();
-        }
-
-        if (id == R.id.drawer_class_news_button) {
-            Intent intent = new Intent(this, NavBarTemplate.class);
-            startActivity(intent);
-            finish();
-        }
-        if (id == R.id.drawer_class_event_button) {
-            Intent intent = new Intent(this, Event_listActivity.class);
-            startActivity(intent);
-            finish();
-        }
-
-
-        if (id == R.id.drawer_class_logout_button) {
-            logoutUser();
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
-    private void logoutUser() {
-        session.setLogin(false);
-
-        db.deleteUsers();
-
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
-        finish();
     }
 }

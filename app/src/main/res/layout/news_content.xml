@@ -10,20 +10,11 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="fyp.cnc.cnc_fyp.activity.NavBarTemplate"
-    tools:showIn="@layout/navbartemplate_toolbar">
+    tools:context="fyp.cnc.cnc_fyp.activity.PressNewsActivity"
+    tools:showIn="@layout/news_toolbar">
 
-    <LinearLayout
+    <WebView
+        android:id="@+id/news_container"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:orientation="vertical"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp" >
-
-        <WebView
-            android:id="@+id/news_container"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
+        android:layout_height="wrap_content" />
 </RelativeLayout>
