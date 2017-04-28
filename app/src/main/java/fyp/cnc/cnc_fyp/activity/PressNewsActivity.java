@@ -1,6 +1,8 @@
 package fyp.cnc.cnc_fyp.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,12 +12,18 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.view.MenuItem;
+import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 
 import java.io.IOException;
 
@@ -111,7 +119,8 @@ public class PressNewsActivity extends AppCompatActivity implements NavigationVi
 
     // Description AsyncTask
     private class News extends AsyncTask<Void, Void, Void> {
-        String link;
+        String title[];
+        String link[];
 
         @Override
         protected void onPreExecute() {
@@ -123,7 +132,13 @@ public class PressNewsActivity extends AppCompatActivity implements NavigationVi
                 // Connect to the web site
                 Document document = Jsoup.connect(URL_NEWS).get();
                 // Get the link of the news
-                link = document.select("a[class=content_title2_link]").first().absUrl("href");
+                Elements div = document.select("a[class=content_title2_link]");
+                title = new String[div.size()];
+                link = new String[div.size()];
+                for (int i = 0; i < div.size(); i++) {
+                    title[i] = div.select("a").get(i).text();
+                    link[i] = div.get(i).absUrl("href");
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -132,15 +147,48 @@ public class PressNewsActivity extends AppCompatActivity implements NavigationVi
 
         @Override
         protected void onPostExecute(Void result) {
-            // Load and display the web
-            WebView content = (WebView) findViewById(R.id.news_container);
-            content.loadUrl(link);
-            content.setWebViewClient(new WebViewClient() {
-                public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                    view.loadUrl(url);
-                    return true;
-                }
-            });
+            //Display news list
+            LinearLayout layout = (LinearLayout) findViewById(R.id.news_Layout);
+            for (int i = 0; i < title.length; i++) {
+                //Add news title
+                final TextView rowTitle = new TextView(getApplicationContext());
+                rowTitle.setText(title[i]);
+                rowTitle.setPadding(5, 5, 5, 5);
+                rowTitle.setTypeface(null, Typeface.BOLD);
+                layout.addView(rowTitle);
+
+                //Add news links
+                final TextView rowLink = new TextView(getApplicationContext());
+                SpannableString content = new SpannableString(link[i]);
+                content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
+                rowLink.setText(content);
+                rowLink.setPadding(5, 5, 5, 30);
+                rowLink.setTypeface(null, Typeface.ITALIC);
+                rowLink.setTextColor(Color.BLUE);
+                rowLink.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View view) {
+                        //Clean the layout
+                        LinearLayout layout = (LinearLayout) findViewById(R.id.news_Layout);
+                        layout.removeAllViews();
+                        //Get the detail of clicked link
+                        TextView textView = (TextView) view;
+                        CharSequence linkText = textView.getText();
+                        String link = linkText.toString();
+                        //Load and display the web
+                        final WebView newsContainer = new WebView(getApplicationContext());
+                        newsContainer.loadUrl(link);
+                        newsContainer.setWebViewClient(new WebViewClient() {
+                            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                                view.loadUrl(url);
+                                return true;
+                            }
+                        });
+                        newsContainer.scrollTo(650, 0);
+                        layout.addView(newsContainer);
+                    }
+                });
+                layout.addView(rowLink);
+            }
         }
     }
 }
