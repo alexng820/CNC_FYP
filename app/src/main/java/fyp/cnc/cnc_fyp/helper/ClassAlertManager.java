@@ -32,9 +32,10 @@ import fyp.cnc.cnc_fyp.activity.Class_scheduleActivity;
 //Service that check how much time left for next class and notify user if he needs to set off to school
 
 public class ClassAlertManager extends Service {
-    //Constant
     public static final long NOTIFY_INTERVAL = 15 * 60 * 1000; // 15 minutes
     private static final String TAG = ClassAlertManager.class.getSimpleName();
+    private int secondsTillNextLesson;
+    private String nextCourseCode;
 
     //SQLite database
     private SQLiteHandler db;
@@ -76,11 +77,6 @@ public class ClassAlertManager extends Service {
             @Override
             public void onResponse(String response) {
                 try {
-                    //Store the closest class information
-                    int weekDay;
-                    int startHour;
-                    int startMin;
-
                     //Get the class information from server
                     JSONObject jsonObject = new JSONObject(response);
                     JSONArray courseList = jsonObject.getJSONArray("section");
@@ -88,9 +84,9 @@ public class ClassAlertManager extends Service {
                         //Loop through all course information
                         for (int i = 0; i < courseList.length(); i++) {
                             JSONObject course = courseList.getJSONObject(i);
-                            weekDay = course.getInt("weekday");
-                            startHour = Integer.parseInt(course.getString("starttime").split(":")[0]);
-                            startMin = Integer.parseInt(course.getString("starttime").split(":")[1]);
+                            int weekDay = course.getInt("weekday");
+                            int startHour = Integer.parseInt(course.getString("starttime").split(":")[0]);
+                            int startMin = Integer.parseInt(course.getString("starttime").split(":")[1]);
 
                             //Get current time
                             Calendar dateTime = Calendar.getInstance();
@@ -107,11 +103,15 @@ public class ClassAlertManager extends Service {
                             //Get current Unix time
                             int unixTime = (int) (System.currentTimeMillis() / 1000L);
 
+                            //If lesson already passed, proceed to next lesson
+                            if ((nextLessonUnixTime - unixTime) < 0) {
+                                continue;
+                            }
+
                             //If next lesson of this course is the closest, register it in global variables
-                            if ((Globals.nextLessonIn == 0) || ((nextLessonUnixTime - unixTime) < Globals.nextLessonIn)) {
-                                Globals.nextLessonIn = (nextLessonUnixTime - unixTime);
-                                Globals.nextCourseCode = course.getString("section_code");
-                                Globals.nextCourseTime = course.getString("starttime").split(":")[0] + course.getString("starttime").split(":")[1];
+                            if ((secondsTillNextLesson == 0) || ((nextLessonUnixTime - unixTime) < secondsTillNextLesson)) {
+                                secondsTillNextLesson = (nextLessonUnixTime - unixTime);
+                                nextCourseCode = course.getString("section_code");
                             }
                         }
                     }
@@ -159,7 +159,7 @@ public class ClassAlertManager extends Service {
         NotificationCompat.Builder mBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle("Class coming soon!")
-                .setContentText("Class " + Globals.nextCourseCode + " starting in " + (Globals.nextLessonIn / 60) + " mins.")
+                .setContentText("Class " + nextCourseCode + " starting in " + (secondsTillNextLesson / 60) + " mins.")
                 .setPriority(Notification.PRIORITY_HIGH);
         //Set the onClick intent of the notification
         Intent resultIntent = new Intent(this, Class_scheduleActivity.class);
@@ -185,9 +185,10 @@ public class ClassAlertManager extends Service {
                 @Override
                 public void run() {
                     checkClass();
-                    if ((Globals.nextLessonIn != 0) || (Globals.secondsToSchool != 0)) {
+                    if ((secondsTillNextLesson != 0) && (Globals.secondsToSchool != 0)) {
+                        int minutesBuffer = ((secondsTillNextLesson - Globals.secondsToSchool) / 60);
                         //If user have 15 minutes of less buffer to go to school from his location, send a notification
-                        if (((Globals.nextLessonIn - Globals.secondsToSchool) / 60) <= 15) {
+                        if ((-15 < minutesBuffer) && (minutesBuffer <= 15)) {
                             showNotification();
                         }
                     }

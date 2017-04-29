@@ -29,6 +29,8 @@ public class LocationHandler extends Service {
     private static final int LOCATION_INTERVAL = 15 * 60 * 1000; //15 minutes
     private static final float LOCATION_DISTANCE = 10f;
     private static final String API_KEY = "AIzaSyCfMMMtkpy5nEqI8Vm4GcHvQX_M0LpTz7w"; //API key for Google Direction API
+    String latitude;
+    String longitude;
 
     LocationListener[] mLocationListeners = new LocationListener[]{
             new LocationListener(LocationManager.GPS_PROVIDER),
@@ -96,8 +98,8 @@ public class LocationHandler extends Service {
             Location location = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             //Store last known location in global variable
             if (location != null) {
-                Globals.latitude = Double.toString(location.getLatitude());
-                Globals.longitude = Double.toString(location.getLongitude());
+                latitude = Double.toString(location.getLatitude());
+                longitude = Double.toString(location.getLongitude());
                 getDirection();
             }
         }
@@ -105,7 +107,7 @@ public class LocationHandler extends Service {
 
     //Get the time needed from user location to school
     public void getDirection() {
-        String origin = Globals.latitude + "," + Globals.longitude;
+        String origin = latitude + "," + longitude;
         String destination = "The+Open+University+Of+Hong+Kong";
         String mode = "transit"; //Public transport
 
@@ -150,8 +152,8 @@ public class LocationHandler extends Service {
 
         @Override
         public void onLocationChanged(Location location) {
-            Globals.latitude = Double.toString(location.getLatitude());
-            Globals.longitude = Double.toString(location.getLongitude());
+            latitude = Double.toString(location.getLatitude());
+            longitude = Double.toString(location.getLongitude());
             getDirection();
             mLastLocation.set(location);
         }
