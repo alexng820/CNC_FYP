@@ -20,16 +20,7 @@ import java.net.URL;
 import fyp.cnc.cnc_fyp.R;
 
 public class TestActivity extends AppCompatActivity {
-    String json_string=null;
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_test);
-        TextView tv_test=(TextView)findViewById(R.id.tv_test);
-        Thread thread = new Thread(get_json);
-        thread.start();
-        tv_test.setText(json_string);
-    }
+    String json_string = null;
     private Runnable get_json = new Runnable() {
         public void run() {
             // 運行網路連線的程式
@@ -39,11 +30,21 @@ public class TestActivity extends AppCompatActivity {
                 json_string = temp.getString("1");
             } catch (Exception e) {
                 Log.e("JSON Parser", "Error due tuen to a string ");
-                json_string="f";
+                json_string = "f";
             }
-
         }
     };
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_test);
+        TextView tv_test = (TextView) findViewById(R.id.tv_test);
+        Thread thread = new Thread(get_json);
+        thread.start();
+        tv_test.setText(json_string);
+    }
+
     public JSONObject get_data() {
         InputStream is;
         JSONObject json = null;
@@ -53,12 +54,10 @@ public class TestActivity extends AppCompatActivity {
         try {
             _url = new URL("http://35.167.144.165/test.php");
             urlConnection = (HttpURLConnection) _url.openConnection();
-        }
-        catch (MalformedURLException e) {
+        } catch (MalformedURLException e) {
             Log.e("JSON Parser", "Error due to a malformed URL " + e.toString());
             return null;
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             Log.e("JSON Parser", "IO error " + e.toString());
             return null;
         }
@@ -71,22 +70,17 @@ public class TestActivity extends AppCompatActivity {
                 total.append(line).append('\n');
             }
             output = total.toString();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             Log.e("JSON Parser", "IO error " + e.toString());
             return null;
-        }
-        finally{
+        } finally {
             urlConnection.disconnect();
         }
         try {
             json = new JSONObject(output);
-        }
-        catch (JSONException e) {
+        } catch (JSONException e) {
             Log.e("JSON Parser", "Error parsing data " + e.toString());
         }
         return json;
     }
-
-
 }

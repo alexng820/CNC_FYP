@@ -3,6 +3,7 @@ package fyp.cnc.cnc_fyp.activity;
 import android.content.Intent;
 import android.graphics.RectF;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -11,7 +12,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.alamkanak.weekview.DateTimeInterpreter;
 import com.alamkanak.weekview.MonthLoader;
@@ -26,17 +26,8 @@ import fyp.cnc.cnc_fyp.R;
 import fyp.cnc.cnc_fyp.helper.SQLiteHandler;
 import fyp.cnc.cnc_fyp.helper.SessionManager;
 
-/**
- * Created by Alex Ng on 21/1/2017.
- */
-
-public abstract class Class_scheduleAbstract  extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,WeekView.EventClickListener, MonthLoader.MonthChangeListener, WeekView.EventLongPressListener, WeekView.EmptyViewLongPressListener {
-    private static final int TYPE_DAY_VIEW = 1;
-    private static final int TYPE_THREE_DAY_VIEW = 2;
-    private static final int TYPE_WEEK_VIEW = 3;
-    private int mWeekViewType = TYPE_WEEK_VIEW;
+public abstract class Class_scheduleAbstract extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, WeekView.EventClickListener, MonthLoader.MonthChangeListener, WeekView.EventLongPressListener, WeekView.EmptyViewLongPressListener {
     private WeekView mWeekView;
-
     private SQLiteHandler db;
     private SessionManager session;
 
@@ -48,22 +39,13 @@ public abstract class Class_scheduleAbstract  extends AppCompatActivity implemen
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        View hView =  navigationView.getHeaderView(0);
         db = new SQLiteHandler(getApplicationContext());
-//        HashMap<String, String> user = db.getUserDetails();
-//        TextView nav_username=(TextView) hView.findViewById(R.id.nav_username);
-//        TextView nav_useremail=(TextView) hView.findViewById(R.id.nav_useremail);
-//        String userName = user.get("userName");
-//        String userEmail = user.get("userEmail");
-//        nav_username.setText(userName);
-//        nav_useremail.setText(userEmail);
         mWeekView = (WeekView) findViewById(R.id.weekView);
         mWeekView.setOnEventClickListener(this);
         mWeekView.setMonthChangeListener(this);
@@ -79,8 +61,6 @@ public abstract class Class_scheduleAbstract  extends AppCompatActivity implemen
         }
     }
 
-
-
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -91,10 +71,9 @@ public abstract class Class_scheduleAbstract  extends AppCompatActivity implemen
         }
     }
 
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
@@ -105,7 +84,7 @@ public abstract class Class_scheduleAbstract  extends AppCompatActivity implemen
         }
 
         if (id == R.id.drawer_class_news_button) {
-            Intent intent = new Intent(this, NavBarTemplate.class);
+            Intent intent = new Intent(this, PressNewsActivity.class);
             startActivity(intent);
             finish();
         }
@@ -114,7 +93,6 @@ public abstract class Class_scheduleAbstract  extends AppCompatActivity implemen
             startActivity(intent);
             finish();
         }
-
 
         if (id == R.id.drawer_class_logout_button) {
             logoutUser();
@@ -128,6 +106,7 @@ public abstract class Class_scheduleAbstract  extends AppCompatActivity implemen
     /**
      * Set up a date time interpreter which will show short date values when in week view and long
      * date values otherwise.
+     *
      * @param shortDate True if the date values should be short.
      */
     private void setupDateTimeInterpreter(final boolean shortDate) {
@@ -153,10 +132,6 @@ public abstract class Class_scheduleAbstract  extends AppCompatActivity implemen
         });
     }
 
-    protected String getEventTitle(Calendar time) {
-        return String.format("Event of %02d:%02d %s/%d", time.get(Calendar.HOUR_OF_DAY), time.get(Calendar.MINUTE), time.get(Calendar.MONTH)+1, time.get(Calendar.DAY_OF_MONTH));
-    }
-
     @Override
     public void onEventClick(WeekViewEvent event, RectF eventRect) {
     }
@@ -165,17 +140,13 @@ public abstract class Class_scheduleAbstract  extends AppCompatActivity implemen
     public void onEventLongPress(WeekViewEvent event, RectF eventRect) {
         AlertDialog.Builder MyAlertDialog = new AlertDialog.Builder(this);
         MyAlertDialog.setTitle("Detail");
-        String msg="Course ID:"+event.getName().split("_")[0]+"\nSection:"+event.getName().split("_")[1]+"\nLocation:"+event.getName().split("_")[2]+"\nInstructor:"+event.getLocation() ;
+        String msg = "Course ID:" + event.getName().split("_")[0] + "\nSection:" + event.getName().split("_")[1] + "\nLocation:" + event.getName().split("_")[2] + "\nInstructor:" + event.getLocation();
         MyAlertDialog.setMessage(msg);
         MyAlertDialog.show();
     }
 
     @Override
     public void onEmptyViewLongPress(Calendar time) {
-    }
-
-    public WeekView getWeekView() {
-        return mWeekView;
     }
 
     private void logoutUser() {

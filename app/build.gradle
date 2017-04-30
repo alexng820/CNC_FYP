@@ -5,7 +5,7 @@ android {
     buildToolsVersion "25.0.0"
     defaultConfig {
         applicationId "fyp.cnc.cnc_fyp"
-        minSdkVersion 22
+        minSdkVersion 23
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
@@ -36,10 +36,9 @@ dependencies {
     compile 'com.afollestad.material-dialogs:core:0.9.4.4'
     compile files('jsoup-1.10.2.jar')
     compile 'com.github.alamkanak:android-week-view:1.2.6'
-    compile 'com.android.support:appcompat-v7:25.0.1'
-    compile 'org.mongodb:mongo-java-driver:3.0.3'
     compile 'com.android.volley:volley:1.0.0'
-    compile 'com.android.support:design:25.0.1'
+    compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-beta4'
+    compile 'com.android.support:design:25.3.1'
     testCompile 'junit:junit:4.12'
 }

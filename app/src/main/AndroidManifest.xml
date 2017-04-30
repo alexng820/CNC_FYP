@@ -3,9 +3,7 @@
     package="fyp.cnc.cnc_fyp">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <application
         android:name=".helper.AppController"
         android:allowBackup="true"
@@ -35,14 +33,7 @@
         <activity
             android:name=".activity.Event_listActivity"
             android:label="@string/title_activity_event_list"
-            android:theme="@style/AppTheme.NoActionBar">
-
-            <intent-filter android:autoVerify="true">
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="cncevent" android:host="event"/>
-            </intent-filter>
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
+
 </manifest>

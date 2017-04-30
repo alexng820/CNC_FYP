@@ -23,6 +23,8 @@ import java.util.Map;
 
 import fyp.cnc.cnc_fyp.R;
 import fyp.cnc.cnc_fyp.helper.AppController;
+import fyp.cnc.cnc_fyp.helper.ClassAlertManager;
+import fyp.cnc.cnc_fyp.helper.LocationHandler;
 import fyp.cnc.cnc_fyp.helper.SQLiteHandler;
 import fyp.cnc.cnc_fyp.helper.SessionManager;
 
@@ -57,7 +59,11 @@ public class LoginActivity extends Activity {
         //Check if user is already logged in or not
         if (session.isLoggedIn()) {
             //User is already logged in
-            Intent intent = new Intent(LoginActivity.this, Event_listActivity.class);
+            Intent intent = new Intent(LoginActivity.this, LocationHandler.class);
+            startService(intent);
+            intent = new Intent(LoginActivity.this, ClassAlertManager.class);
+            startService(intent);
+            intent = new Intent(LoginActivity.this, Class_scheduleActivity.class);
             startActivity(intent);
             finish();
         }
@@ -115,7 +121,11 @@ public class LoginActivity extends Activity {
                         db.addUser(userID, userName, userGender, userRole, userStatus);
 
                         //Launch main activity
-                        Intent intent = new Intent(LoginActivity.this, Class_scheduleActivity.class);
+                        Intent intent = new Intent(LoginActivity.this, LocationHandler.class);
+                        startService(intent);
+                        intent = new Intent(LoginActivity.this, ClassAlertManager.class);
+                        startService(intent);
+                        intent = new Intent(LoginActivity.this, Class_scheduleActivity.class);
                         startActivity(intent);
                         finish();
                     } else {
