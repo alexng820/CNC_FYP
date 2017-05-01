@@ -5,14 +5,11 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.android.volley.Request.Method;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 
 import org.json.JSONException;
@@ -69,19 +66,17 @@ public class LoginActivity extends Activity {
         }
 
         //Login button onClick event
-        buttonLogin.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                String userID = inputUserID.getText().toString().trim();
-                String userPass = inputUserPass.getText().toString().trim();
+        buttonLogin.setOnClickListener(view -> {
+            String userID = inputUserID.getText().toString().trim();
+            String userPass = inputUserPass.getText().toString().trim();
 
-                //Check for empty data in form
-                if (!userID.isEmpty() && !userPass.isEmpty()) {
-                    //Login
-                    checkLogin(userID, userPass);
-                } else {
-                    //Required credentials are missing
-                    Toast.makeText(getApplicationContext(), "Please enter your login credentials.", Toast.LENGTH_LONG).show();
-                }
+            //Check for empty data in form
+            if (!userID.isEmpty() && !userPass.isEmpty()) {
+                //Login
+                checkLogin(userID, userPass);
+            } else {
+                //Required credentials are missing
+                Toast.makeText(getApplicationContext(), "Please enter your login credentials.", Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -94,58 +89,52 @@ public class LoginActivity extends Activity {
         progressDialog.setMessage("Logging in...");
         showDialog();
 
-        StringRequest strRequest = new StringRequest(Method.POST, URL_LOGIN, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Log.d(TAG, "Login Response: " + response);
-                hideDialog();
+        StringRequest strRequest = new StringRequest(Method.POST, URL_LOGIN, response -> {
+            Log.d(TAG, "Login Response: " + response);
+            hideDialog();
 
-                try {
-                    JSONObject jsonObject = new JSONObject(response);
-                    boolean error = jsonObject.getBoolean("error");
+            try {
+                JSONObject jsonObject = new JSONObject(response);
+                boolean error = jsonObject.getBoolean("error");
 
-                    //Check for error
-                    if (!error) {
-                        //Log in successful
-                        session.setLogin(true);
+                //Check for error
+                if (!error) {
+                    //Log in successful
+                    session.setLogin(true);
 
-                        //Store the ser in SQLite
-                        JSONObject user = jsonObject.getJSONObject("user");
-                        String userID = user.getString("userID");
-                        String userName = user.getString("userName");
-                        String userGender = user.getString("userGender");
-                        String userRole = user.getString("userRole");
-                        String userStatus = user.getString("userStatus");
+                    //Store the ser in SQLite
+                    JSONObject user = jsonObject.getJSONObject("user");
+                    String userID1 = user.getString("userID");
+                    String userName = user.getString("userName");
+                    String userGender = user.getString("userGender");
+                    String userRole = user.getString("userRole");
+                    String userStatus = user.getString("userStatus");
 
-                        //Insert row to user table
-                        db.addUser(userID, userName, userGender, userRole, userStatus);
+                    //Insert row to user table
+                    db.addUser(userID1, userName, userGender, userRole, userStatus);
 
-                        //Launch main activity
-                        Intent intent = new Intent(LoginActivity.this, LocationHandler.class);
-                        startService(intent);
-                        intent = new Intent(LoginActivity.this, ClassAlertManager.class);
-                        startService(intent);
-                        intent = new Intent(LoginActivity.this, Class_scheduleActivity.class);
-                        startActivity(intent);
-                        finish();
-                    } else {
-                        //Get error
-                        String errorMsg = jsonObject.getString("error_msg");
-                        Toast.makeText(getApplicationContext(), errorMsg, Toast.LENGTH_LONG).show();
-                    }
-                } catch (JSONException e) {
-                    //JSON error
-                    e.printStackTrace();
-                    Toast.makeText(getApplicationContext(), "JSON Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    //Launch main activity
+                    Intent intent = new Intent(LoginActivity.this, LocationHandler.class);
+                    startService(intent);
+                    intent = new Intent(LoginActivity.this, ClassAlertManager.class);
+                    startService(intent);
+                    intent = new Intent(LoginActivity.this, Class_scheduleActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    //Get error
+                    String errorMsg = jsonObject.getString("error_msg");
+                    Toast.makeText(getApplicationContext(), errorMsg, Toast.LENGTH_LONG).show();
                 }
+            } catch (JSONException e) {
+                //JSON error
+                e.printStackTrace();
+                Toast.makeText(getApplicationContext(), "JSON Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, "Login Error: " + error.getMessage());
-                Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
-                hideDialog();
-            }
+        }, error -> {
+            Log.e(TAG, "Login Error: " + error.getMessage());
+            Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+            hideDialog();
         }) {
             @Override
             protected Map<String, String> getParams() {

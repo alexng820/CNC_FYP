@@ -13,8 +13,6 @@ import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
 import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 
 import org.json.JSONArray;
@@ -73,59 +71,51 @@ public class ClassAlertManager extends Service {
         //Tag used to cancel the request
         String tag_string_req = "req_class_info";
 
-        StringRequest strRequest = new StringRequest(Request.Method.GET, URL_SEARCHSECTION, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    //Get the class information from server
-                    JSONObject jsonObject = new JSONObject(response);
-                    JSONArray courseList = jsonObject.getJSONArray("section");
-                    if (courseList != null) {
-                        //Loop through all course information
-                        for (int i = 0; i < courseList.length(); i++) {
-                            JSONObject course = courseList.getJSONObject(i);
-                            int weekDay = course.getInt("weekday");
-                            int startHour = Integer.parseInt(course.getString("starttime").split(":")[0]);
-                            int startMin = Integer.parseInt(course.getString("starttime").split(":")[1]);
+        StringRequest strRequest = new StringRequest(Request.Method.GET, URL_SEARCHSECTION, response -> {
+            try {
+                //Get the class information from server
+                JSONObject jsonObject = new JSONObject(response);
+                JSONArray courseList = jsonObject.getJSONArray("section");
+                if (courseList != null) {
+                    //Loop through all course information
+                    for (int i = 0; i < courseList.length(); i++) {
+                        JSONObject course = courseList.getJSONObject(i);
+                        int weekDay = course.getInt("weekday");
+                        int startHour = Integer.parseInt(course.getString("starttime").split(":")[0]);
+                        int startMin = Integer.parseInt(course.getString("starttime").split(":")[1]);
 
-                            //Get current time
-                            Calendar dateTime = Calendar.getInstance();
-                            while (checkWeekday(dateTime) != weekDay) {
-                                //Get date and time of next lesson
-                                dateTime.add(Calendar.DATE, 1);
-                            }
-                            dateTime.set(Calendar.HOUR_OF_DAY, startHour);
-                            dateTime.set(Calendar.MINUTE, startMin);
-                            dateTime.set(Calendar.SECOND, 0);
-                            dateTime.set(Calendar.MILLISECOND, 0);
-                            //Get next lesson Unix time
-                            int nextLessonUnixTime = (int) (dateTime.getTimeInMillis() / 1000L);
-                            //Get current Unix time
-                            int unixTime = (int) (System.currentTimeMillis() / 1000L);
+                        //Get current time
+                        Calendar dateTime = Calendar.getInstance();
+                        while (checkWeekday(dateTime) != weekDay) {
+                            //Get date and time of next lesson
+                            dateTime.add(Calendar.DATE, 1);
+                        }
+                        dateTime.set(Calendar.HOUR_OF_DAY, startHour);
+                        dateTime.set(Calendar.MINUTE, startMin);
+                        dateTime.set(Calendar.SECOND, 0);
+                        dateTime.set(Calendar.MILLISECOND, 0);
+                        //Get next lesson Unix time
+                        int nextLessonUnixTime = (int) (dateTime.getTimeInMillis() / 1000L);
+                        //Get current Unix time
+                        int unixTime = (int) (System.currentTimeMillis() / 1000L);
 
-                            //If lesson already passed, proceed to next lesson
-                            if ((nextLessonUnixTime - unixTime) < 0) {
-                                continue;
-                            }
+                        //If lesson already passed, proceed to next lesson
+                        if ((nextLessonUnixTime - unixTime) < 0) {
+                            continue;
+                        }
 
-                            //If next lesson of this course is the closest, register it in global variables
-                            if ((secondsTillNextLesson == 0) || ((nextLessonUnixTime - unixTime) < secondsTillNextLesson)) {
-                                secondsTillNextLesson = (nextLessonUnixTime - unixTime);
-                                nextCourseCode = course.getString("section_code");
-                            }
+                        //If next lesson of this course is the closest, register it in global variables
+                        if ((secondsTillNextLesson == 0) || ((nextLessonUnixTime - unixTime) < secondsTillNextLesson)) {
+                            secondsTillNextLesson = (nextLessonUnixTime - unixTime);
+                            nextCourseCode = course.getString("section_code");
                         }
                     }
-                } catch (JSONException e) {
-                    //JSON error
-                    e.printStackTrace();
                 }
+            } catch (JSONException e) {
+                //JSON error
+                e.printStackTrace();
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, "Error: " + error.getMessage());
-            }
-        });
+        }, error -> Log.e(TAG, "Error: " + error.getMessage()));
 
         //Adding request to request queue
         AppController.getInstance().addToRequestQueue(strRequest, tag_string_req);
@@ -181,16 +171,13 @@ public class ClassAlertManager extends Service {
         @Override
         public void run() {
             //Run task on new thread
-            mHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    checkClass();
-                    if ((secondsTillNextLesson != 0) && (Globals.secondsToSchool != 0)) {
-                        int minutesBuffer = ((secondsTillNextLesson - Globals.secondsToSchool) / 60);
-                        //If user have 15 minutes of less buffer to go to school from his location, send a notification
-                        if ((-15 < minutesBuffer) && (minutesBuffer <= 15)) {
-                            showNotification();
-                        }
+            mHandler.post(() -> {
+                checkClass();
+                if ((secondsTillNextLesson != 0) && (Globals.secondsToSchool != 0)) {
+                    int minutesBuffer = ((secondsTillNextLesson - Globals.secondsToSchool) / 60);
+                    //If user have 15 minutes of less buffer to go to school from his location, send a notification
+                    if ((-15 < minutesBuffer) && (minutesBuffer <= 15)) {
+                        showNotification();
                     }
                 }
             });

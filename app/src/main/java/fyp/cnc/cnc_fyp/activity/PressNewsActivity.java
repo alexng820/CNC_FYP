@@ -15,7 +15,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.view.MenuItem;
-import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
@@ -165,27 +164,24 @@ public class PressNewsActivity extends AppCompatActivity implements NavigationVi
                 rowLink.setPadding(5, 5, 5, 30);
                 rowLink.setTypeface(null, Typeface.ITALIC);
                 rowLink.setTextColor(Color.BLUE);
-                rowLink.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View view) {
-                        //Clean the layout
-                        LinearLayout layout = (LinearLayout) findViewById(R.id.news_Layout);
-                        layout.removeAllViews();
-                        //Get the detail of clicked link
-                        TextView textView = (TextView) view;
-                        CharSequence linkText = textView.getText();
-                        String link = linkText.toString();
-                        //Load and display the web
-                        final WebView newsContainer = new WebView(getApplicationContext());
-                        newsContainer.loadUrl(link);
-                        newsContainer.setWebViewClient(new WebViewClient() {
-                            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                                view.loadUrl(url);
-                                return true;
-                            }
-                        });
-                        newsContainer.scrollTo(650, 0);
-                        layout.addView(newsContainer);
-                    }
+                rowLink.setOnClickListener(view -> {
+                    //Clean the layout
+                    layout.removeAllViews();
+                    //Get the detail of clicked link
+                    TextView textView = (TextView) view;
+                    CharSequence linkText = textView.getText();
+                    String link1 = linkText.toString();
+                    //Load and display the web
+                    final WebView newsContainer = new WebView(getApplicationContext());
+                    newsContainer.loadUrl(link1);
+                    newsContainer.setWebViewClient(new WebViewClient() {
+                        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                            view.loadUrl(url);
+                            return true;
+                        }
+                    });
+                    newsContainer.scrollTo(650, 0);
+                    layout.addView(newsContainer);
                 });
                 layout.addView(rowLink);
             }

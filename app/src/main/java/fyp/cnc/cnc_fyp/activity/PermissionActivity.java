@@ -36,13 +36,11 @@ public class PermissionActivity extends AppCompatActivity {
         }
 
         //If user does not approve location permission, retry
-        buttonBack.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                Intent intent = new Intent(PermissionActivity.this, LocationHandler.class);
-                startService(intent);
-                intent = new Intent(PermissionActivity.this, Class_scheduleActivity.class);
-                startActivity(intent);
-            }
+        buttonBack.setOnClickListener(view -> {
+            Intent intent = new Intent(PermissionActivity.this, LocationHandler.class);
+            startService(intent);
+            intent = new Intent(PermissionActivity.this, Class_scheduleActivity.class);
+            startActivity(intent);
         });
     }
 
