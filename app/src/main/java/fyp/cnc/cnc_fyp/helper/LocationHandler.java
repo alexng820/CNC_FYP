@@ -69,17 +69,18 @@ public class LocationHandler extends Service {
             Log.d(TAG, "gps provider does not exist " + ex.getMessage());
         }
         //Check if location permission already granted, redirect to permission helper if not
-        if (checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED || (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
+        if (checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED || (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)) {
+            //Get last known location
+            Location location = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            //Store last known location in global variable
+            if (location != null) {
+                latitude = Double.toString(location.getLatitude());
+                longitude = Double.toString(location.getLongitude());
+                getDirection();
+            }
+        } else {
             Intent intent = new Intent(this, PermissionActivity.class);
             startActivity(intent);
-        }
-        //Get last known location
-        Location location = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        //Store last known location in global variable
-        if (location != null) {
-            latitude = Double.toString(location.getLatitude());
-            longitude = Double.toString(location.getLongitude());
-            getDirection();
         }
     }
 
