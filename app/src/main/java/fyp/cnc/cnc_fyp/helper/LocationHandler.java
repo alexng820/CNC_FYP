@@ -12,8 +12,6 @@ import android.os.IBinder;
 import android.util.Log;
 
 import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 
 import org.json.JSONException;
@@ -70,6 +68,19 @@ public class LocationHandler extends Service {
         } catch (IllegalArgumentException ex) {
             Log.d(TAG, "gps provider does not exist " + ex.getMessage());
         }
+        //Check if location permission already granted, redirect to permission helper if not
+        if (checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED || (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
+            Intent intent = new Intent(this, PermissionActivity.class);
+            startActivity(intent);
+        }
+        //Get last known location
+        Location location = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        //Store last known location in global variable
+        if (location != null) {
+            latitude = Double.toString(location.getLatitude());
+            longitude = Double.toString(location.getLongitude());
+            getDirection();
+        }
     }
 
     @Override
@@ -94,14 +105,6 @@ public class LocationHandler extends Service {
                 startActivity(intent);
             }
             mLocationManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
-            //Get last known location
-            Location location = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            //Store last known location in global variable
-            if (location != null) {
-                latitude = Double.toString(location.getLatitude());
-                longitude = Double.toString(location.getLongitude());
-                getDirection();
-            }
         }
     }
 
@@ -116,28 +119,20 @@ public class LocationHandler extends Service {
         //Tag used to cancel the request
         String tag_string_req = "req_google__direction_API";
 
-        StringRequest strRequest = new StringRequest(Request.Method.GET, API_URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    //Parse the JSON response from Google Direction API
-                    JSONObject jsonObject = new JSONObject(response);
-                    JSONObject routes = jsonObject.getJSONArray("routes").getJSONObject(0);
-                    JSONObject legs = routes.getJSONArray("legs").getJSONObject(0);
-                    JSONObject duration = legs.getJSONObject("duration");
-                    //Update the time needed to go to school in second
-                    Globals.secondsToSchool = duration.getInt("value");
-                } catch (JSONException e) {
-                    //JSON error
-                    e.printStackTrace();
-                }
+        StringRequest strRequest = new StringRequest(Request.Method.GET, API_URL, response -> {
+            try {
+                //Parse the JSON response from Google Direction API
+                JSONObject jsonObject = new JSONObject(response);
+                JSONObject routes = jsonObject.getJSONArray("routes").getJSONObject(0);
+                JSONObject legs = routes.getJSONArray("legs").getJSONObject(0);
+                JSONObject duration = legs.getJSONObject("duration");
+                //Update the time needed to go to school in second
+                Globals.secondsToSchool = duration.getInt("value");
+            } catch (JSONException e) {
+                //JSON error
+                e.printStackTrace();
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, "Error: " + error.getMessage());
-            }
-        });
+        }, error -> Log.e(TAG, "Error: " + error.getMessage()));
 
         //Adding request to request queue
         AppController.getInstance().addToRequestQueue(strRequest, tag_string_req);

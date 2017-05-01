@@ -353,7 +353,7 @@ public class Event_listActivity extends AppCompatActivity
         }
 
         if (id == R.id.drawer_class_news_button) {
-            Intent intent = new Intent(this, NavBarTemplate.class);
+            Intent intent = new Intent(this, PressNewsActivity.class);
             startActivity(intent);
             finish();
         }
