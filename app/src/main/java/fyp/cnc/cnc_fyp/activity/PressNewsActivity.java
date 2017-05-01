@@ -92,7 +92,7 @@ public class PressNewsActivity extends AppCompatActivity implements NavigationVi
             finish();
         }
         if (id == R.id.drawer_class_event_button) {
-            Intent intent = new Intent(this, Event_listActivity.class);
+            Intent intent = new Intent(this, Event_ViewerActivity.class);
             startActivity(intent);
             finish();
         }

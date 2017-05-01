@@ -12,7 +12,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,7 +41,7 @@ import fyp.cnc.cnc_fyp.R;
 import fyp.cnc.cnc_fyp.helper.SQLiteHandler;
 import fyp.cnc.cnc_fyp.helper.SessionManager;
 
-public class Event_listActivity extends AppCompatActivity
+public class Event_ViewerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private static final String URL_GETEVENT= "http://35.167.144.165/getevent.php";
     private static final String URL_JOINEVENT= "http://35.167.144.165/joinevent.php";
@@ -56,14 +55,14 @@ public class Event_listActivity extends AppCompatActivity
     ListView list;
     LazyAdapter adapter;
     ArrayList<HashMap<String, String>> events = new ArrayList();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_event_list);
+        setContentView(R.layout.activity_event__viewer);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        db = new SQLiteHandler(getApplicationContext());
-        session = new SessionManager(getApplicationContext());
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -72,7 +71,8 @@ public class Event_listActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
+        db = new SQLiteHandler(getApplicationContext());
+        session = new SessionManager(getApplicationContext());
         Thread thread = new Thread(newThread_getEvent);
         thread.start();
         while(finish<2){
@@ -130,10 +130,10 @@ public class Event_listActivity extends AppCompatActivity
         adapter=new LazyAdapter(this, events);
         list.setAdapter(adapter);
 
-        list.setOnItemClickListener(new OnItemClickListener() {
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
-            public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 showEventDetail(position);
             }
         });
@@ -174,26 +174,26 @@ public class Event_listActivity extends AppCompatActivity
             e.printStackTrace();
         }
         //if(checkecentquota(event_id,quota)) {
-            String url = URL_JOINEVENT + parm;
-            RequestQueue queue = Volley.newRequestQueue(this);
-            JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null,
-                    response -> {
-                        try {
-                            if(response.getString("success")=="true"){
-                                showToast("Join successed");
-                            }else{
-                                showToast("You have already joined. Your status is "+response.getString("success"));
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+        String url = URL_JOINEVENT + parm;
+        RequestQueue queue = Volley.newRequestQueue(this);
+        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                response -> {
+                    try {
+                        if(response.getString("success")=="true"){
+                            showToast("Join successed");
+                        }else{
+                            showToast("You have already joined. Your status is "+response.getString("success"));
                         }
-
-                    },
-                    error -> {
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-            );
 
-            queue.add(getRequest);
+                },
+                error -> {
+                }
+        );
+
+        queue.add(getRequest);
 //        }else{
 //            showToast("it's full");
 //        }
@@ -340,6 +340,8 @@ public class Event_listActivity extends AppCompatActivity
             super.onBackPressed();
         }
     }
+
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -358,7 +360,7 @@ public class Event_listActivity extends AppCompatActivity
             finish();
         }
         if (id == R.id.drawer_class_event_button) {
-            Intent intent = new Intent(this, Event_listActivity.class);
+            Intent intent = new Intent(this, Event_ViewerActivity.class);
             startActivity(intent);
             finish();
         }
@@ -372,7 +374,6 @@ public class Event_listActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
     private void logoutUser() {
         session.setLogin(false);
 

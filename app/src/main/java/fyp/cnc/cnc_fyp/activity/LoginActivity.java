@@ -60,7 +60,7 @@ public class LoginActivity extends Activity {
             startService(intent);
             intent = new Intent(LoginActivity.this, ClassAlertManager.class);
             startService(intent);
-            intent = new Intent(LoginActivity.this, Class_scheduleActivity.class);
+            intent = new Intent(LoginActivity.this, PressNewsActivity.class);
             startActivity(intent);
             finish();
         }
@@ -118,7 +118,7 @@ public class LoginActivity extends Activity {
                     startService(intent);
                     intent = new Intent(LoginActivity.this, ClassAlertManager.class);
                     startService(intent);
-                    intent = new Intent(LoginActivity.this, Class_scheduleActivity.class);
+                    intent = new Intent(LoginActivity.this, PressNewsActivity.class);
                     startActivity(intent);
                     finish();
                 } else {

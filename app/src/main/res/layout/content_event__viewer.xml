@@ -5,15 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="fyp.cnc.cnc_fyp.activity.Event_listActivity"
-    tools:showIn="@layout/app_bar_event_list">
+    tools:context="fyp.cnc.cnc_fyp.activity.Event_ViewerActivity"
+    tools:showIn="@layout/app_bar_event__viewer">
 
 
-        <ListView
-            android:id="@+id/list"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:divider="#b5b5b5"
-            android:dividerHeight="1dp"
-            android:listSelector="@drawable/list_selector" />
+    <ListView
+        android:id="@+id/list"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:divider="#b5b5b5"
+        android:dividerHeight="1dp"
+        android:listSelector="@drawable/list_selector" />
 </android.support.constraint.ConstraintLayout>
