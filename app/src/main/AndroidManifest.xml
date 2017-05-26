@@ -49,7 +49,15 @@
         <activity
             android:name=".activity.Event_ViewerActivity"
             android:label="@string/title_activity_event__viewer"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="cncevent" />
+                <data android:host="event" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
